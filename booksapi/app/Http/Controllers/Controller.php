@@ -52,7 +52,8 @@ class Controller extends BaseController
         // $book_json = json_decode(json_encode($book_array));
         // return $book_json;
         // Note Error upon entry of space ex. Sherlock Holmes vs SherlockHolmes
-        $url = "https://www.googleapis.com/books/v1/volumes?q=$search&filter=free-ebooks&key=AIzaSyDQgUAR7b4eukfyzx5bgEn774CGCp7aNT0&maxResults=5&startIndex=1";
+        $apiKey = '01';
+        $url = "https://www.googleapis.com/books/v1/volumes?q=$search&filter=free-ebooks&key=$apiKey&maxResults=5&startIndex=1";
  
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
