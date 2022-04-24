@@ -16,7 +16,7 @@ function Cart() {
 
   useEffect(()=>{
     const getCart = async() =>{
-      const cart= await axios.post('http://localhost/gbooks/public/cart').then((res) => {
+      const cart= await axios.post('http://localhost/booksapi/public/cart').then((res) => {
         return res.data;
         }
       );

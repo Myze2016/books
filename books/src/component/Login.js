@@ -14,9 +14,10 @@ function Login()  {
                 const result = res.data;
            
                 if (result.length>0) {
-                    alert(result);
+                   
                     sessionStorage.setItem('token', JSON.stringify(true));
                     sessionStorage.setItem('userType', res.data[0].UserType);
+                    sessionStorage.setItem('userID', res.data[0].UserID);
                     window.location.reload(false);
                 } else {
                  alert("user not found");
@@ -47,9 +48,7 @@ function Login()  {
                                 </button>
                             </div>
                             <div class="col-12 mt-2">
-                                <button type="button" class="w-100 btn btn-outline-primary btn-lg">
-                                    Register
-                                </button>
+                              
               
                             </div>
                         </div>

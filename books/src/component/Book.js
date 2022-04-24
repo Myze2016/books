@@ -32,7 +32,7 @@ function Book() {
     const apiID = book.apiID;
     const Title = book.Title;
     const PublishDate = book.PublishDate;
-    axios.post('http://localhost/gbooks/public/addBook', {LibraryID,apiID,Title,PublishDate}).then(
+    axios.post('http://localhost/booksapi/public/addBook', {LibraryID,apiID,Title,PublishDate}).then(
       res => {
           setModalIsOpenToFalse();
         }
@@ -40,10 +40,11 @@ function Book() {
   };
 
   const addPrice = event => {
+
     const apiID = book.apiID;
     const Title = book.Title;
     const PublishDate = book.PublishDate;
-    axios.post('http://localhost/gbooks/public/addBookPrice', {apiID,Title,PublishDate}).then(
+    axios.post('http://localhost/booksapi/public/addBookPrice', {apiID,Title,PublishDate}).then(
       res => {
           navigate('/home/price/'+apiID);
         }
@@ -54,22 +55,26 @@ function Book() {
     const apiID = book.apiID;
     const Title = book.Title;
     const PublishDate = book.PublishDate;
-    axios.post('http://localhost/gbooks/public/addBookPrice', {apiID,Title,PublishDate}).then(
+    axios.post('http://localhost/booksapi/public/addCart', {apiID}).then(
     res => {
-      
+        if (res.data=='price_not_set') {
+          alert('Price Not Set');
+        } else {
+          navigate('/cart');
+        }
       }
     )
 
-    axios.post('http://localhost/gbooks/public/addCart', {apiID}).then(
-      res => {
-        navigate('/cart');
-      }
-    )
+    // axios.post('http://localhost/booksapi/public/addCart', {apiID}).then(
+    //   res => {
+    //     navigate('/cart');
+    //   }
+    // )
   };
 
   useEffect(()=>{
     const libraryList = async() =>{
-      const libraryList = await axios.post('http://localhost/gbooks/public/libraryList').then((res) => {
+      const libraryList = await axios.post('http://localhost/booksapi/public/libraryList').then((res) => {
         return res.data;
         }
       );
@@ -80,12 +85,15 @@ function Book() {
     libraryList();
     
     const getBook = async() =>{
-      
-      const book = await axios.post('http://localhost/gbooks/public/book', {apiID}).then((res) => {
-         
+    
+      const book = await axios.post('http://localhost/booksapi/public/book', {apiID}).then((res) => {
+       
+          
           return res.data;
         }
       );
+
+      
 
       
       setBook(book);
@@ -93,6 +101,7 @@ function Book() {
      
     };
 
+   
     getBook();
    
   },[]);

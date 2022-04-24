@@ -20,7 +20,7 @@ function Loading() {
     
        <Modal isOpen={true} id="modal-loading" aria-labelledby="example-modal-sizes-title-sm"
       >
-        Loading...
+        Please Wait
        </Modal> 
     
     

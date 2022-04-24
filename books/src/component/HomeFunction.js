@@ -29,8 +29,8 @@ function HomeFunction() {
   useEffect(()=>{
     const fetchlibiraries = async() =>{
       setLoading(true);
-      const libraries= await axios.post('http://localhost/gbooks/public/libraryList').then((res) => {
-        setLoading(false);
+      const libraries= await axios.post('http://localhost/booksapi/public/libraryList').then((res) => {
+        
         return res.data;
         }
       );
@@ -41,33 +41,35 @@ function HomeFunction() {
 
     const fetchbooks = async() =>{
       setLoading(true);
-      const book= await axios.post('http://localhost/gbooks/public/books').then((res) => {
-        setLoading(false);
+      const book= await axios.post('http://localhost/booksapi/public/books').then((res) => {
+        
         return res.data;
         
       }
       );
       
       setBooks(book);
+      
     };
 
  
     fetchbooks();
-   
+    setLoading(false);
   },[]);
 
 
   const refreshBooks = async() =>{
     setLoading(true);
   
-    const book= await axios.post('http://localhost/gbooks/public/searchBook',{search}).then((res) => {
-        setLoading(false);
+    const book= await axios.post('http://localhost/booksapi/public/searchBook',{search}).then((res) => {
+        
         console.log(res.data);
         return res.data;
       }
     );
     
     setBooks(book);
+    setLoading(false);
   };
 
   const checkBook = book => {
@@ -96,11 +98,7 @@ function HomeFunction() {
           Search
         </Button>
       </InputGroup>
-      {loadingModal ? (
-        <Loading />
-      ) : (
-        ""
-      )}
+      
       {
        
         books.map(book => 
@@ -118,6 +116,12 @@ function HomeFunction() {
             </div>  
         ) 
       }
+
+{loadingModal ? (
+        <Loading />
+      ) : (
+        ""
+      )}
       </div>
     </div>
   )
