@@ -8,10 +8,12 @@ import {
 } from "react-router-dom";
 import Modal from 'react-modal';
 import Card from 'react-bootstrap/Card';
+import Loading from "./Loading";
 
 
 function Book() {
   let { apiID } = useParams();
+  const [loadingModal, setLoading] = useState(false);
   let navigate = useNavigate();
   const [modalIsOpen, setIsOpen] = useState();
   const [libraryList, setLibraryList] = useState([{}]);
@@ -35,6 +37,7 @@ function Book() {
     axios.post('http://localhost/booksapi/public/addBook', {LibraryID,apiID,Title,PublishDate}).then(
       res => {
           setModalIsOpenToFalse();
+          alert('Book added to library');
         }
       )
   };
@@ -73,6 +76,7 @@ function Book() {
   };
 
   useEffect(()=>{
+    setLoading(true);
     const libraryList = async() =>{
       const libraryList = await axios.post('http://localhost/booksapi/public/libraryList').then((res) => {
         return res.data;
@@ -87,9 +91,15 @@ function Book() {
     const getBook = async() =>{
     
       const book = await axios.post('http://localhost/booksapi/public/book', {apiID}).then((res) => {
-       
           
-          return res.data;
+          if (res.data=='error') {
+            alert("ERROR API DATA")
+            return {"apiID":null,"Title":null,"PublishDate":null,"Authors": []};
+          } else {
+            return res.data;
+          }
+          
+          
         }
       );
 
@@ -97,6 +107,7 @@ function Book() {
 
       
       setBook(book);
+      setLoading(false);
       
      
     };
@@ -113,16 +124,24 @@ function Book() {
   return (
     
     <div>
+      {loadingModal ? (
+        <Loading />
+      ) : (
+        ""
+      )}
       <Modal isOpen={modalIsOpen}>
          
           <h2>{book.id}</h2>
           <button class=" mt-1 btn btn-outline-danger" onClick={setModalIsOpenToFalse}>x</button>
           {
             libraryList.map(library => 
-                <div id="booklist" class="pb-1 pt-2 col-12" >
+                
+                <div id="booklist" class="pb-1 pt-2 col-10" >
+                  
                   <Card >
                     <Card.Body data-item={library.Title} key={library.Title} >
                       <div class="row">
+                        
                         <div class="col-10"><Card.Text>{library.Title}</Card.Text></div>
                         <div class="col-2"><button class="w-100 mt-1 btn btn-outline-primary" data-item={library.LibraryID} onClick={addToLibrary}>Add to Library</button></div>
                       </div>
@@ -134,13 +153,21 @@ function Book() {
         </Modal> 
         
         <div class="row pr-5 pl-5 pt-3">
-       
-        <div id="book" class="col-9" >
+       <div class="col-2 pr-0 border-black">
+       <img width="100%" height="200px"
+                      src={book.img}
+                      alt="new"
+                      />
+       </div>
+        <div id="book" class="col-7" >
           <Card>
             <Card.Header className="bg-dark text-white" as="h4">
               {book.Title}
             </Card.Header>  
             <Card.Body data-item={book.apiID} key={book.apiID} >
+           
+                               
+                        
               <Card.Text>{book.PublishDate}</Card.Text>
               <Card.Text>{book.Authors}</Card.Text>
               </Card.Body>
@@ -151,7 +178,7 @@ function Book() {
         <div class="col-3">
         <button data-item={book.apiID} class="w-100 mt-1 btn btn-outline-primary" onClick={setModalIsOpenToTrue} >Add Library
         </button>
-        <button class="w-100 mt-1 btn btn-outline-primary" data-item={book.id} onClick={addPrice} >Add Price</button>
+        
         <button class="w-100 mt-1 btn btn-outline-primary" data-item={book.id} onClick={addcart}> Add Cart</button>
         </div>
       </div>

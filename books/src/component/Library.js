@@ -77,22 +77,30 @@ function Library() {
   
   return (
     <div>
-      <h3> Library </h3>
+    
      
       <div class="row pl-5 pr-5 pt-3">
-      <button onClick={addLibrary} class=" mt-1 btn btn-outline-primary" >Add Library</button>
+        <div class="col-12">
+        <h3> Library </h3>
+        </div>
+     <div class="col-12">
+     <button onClick={addLibrary} class=" mt-1 btn btn-outline-primary" >Add Library</button>
+     </div>
+      
       {
         libraries
           .map(library =>  
             <div id="Library-List" class="col-12 pb-1 pt-4" >
               <Card>
                 <Card.Header className="bg-dark text-white" as="h4">{library.Title.substring(30,0)+'....'}
-                  <button data-item={library.LibraryID} onClick={editLibrary} class=" mt-1 btn btn-outline-primary" >Edit Library</button>
-                  <button data-item={library.LibraryID} onClick={deleteLibrary} class=" mt-1 btn btn-outline-danger" >Remove Library</button>
+                
+                  <button data-item={library.LibraryID} onClick={editLibrary} class="float-right mr-3 mt-1 btn btn-primary" >Edit Library</button>
+                  <button data-item={library.LibraryID} onClick={deleteLibrary} class=" float-right mr-3 mt-1 btn btn-danger" >Remove Library</button>
+               
                 </Card.Header>  
                 <Card.Body data-item={library.LibraryID} key={library.LibraryID} >
                   <Card.Text>
-                    {library.Title.substring(120,0)+'....'}
+                    {library.Description}
                   </Card.Text>
                 </Card.Body>
               </Card>

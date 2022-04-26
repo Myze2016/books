@@ -53,14 +53,14 @@ function MenuAdmin() {
         <Router>
             <Navbar bg="dark" variant="dark" sticky="top" expand="lg">
             <Container fluid>
-                <Navbar.Brand href="#">Menu</Navbar.Brand>
+                <Navbar.Brand href="#">Books </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '175px' }} navbarScroll>
                         <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/report">Reports</Nav.Link>
                         <NavDropdown title="Account" id="navbarScrollingDropdown">
-                        <NavDropdown.Item >{profile.FirstName}{profile.LastName}</NavDropdown.Item>
+                        <NavDropdown.Item >{profile.FirstName} {profile.LastName}</NavDropdown.Item>
                             <NavDropdown.Item href="/Profile">Profile</NavDropdown.Item>
                             <NavDropdown.Item href="/Logout">Logout</NavDropdown.Item>
                         </NavDropdown>

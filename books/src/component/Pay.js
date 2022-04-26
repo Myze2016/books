@@ -12,7 +12,7 @@ import PaypalPay from "./PaypalPay";
 function Pay() {
   let { CartID } = useParams();
   const [checkOut, setCheckOut] = useState(false);
-  const [carts, setCart] = useState([{BookPrice: "0.00"}]);
+  const [carts, setCart] = useState([{Price: '0'}]);
 	
   useEffect(()=>{
     const getCartItem = async() =>{
@@ -32,7 +32,7 @@ function Pay() {
         <Card>
           <Card.Header className="bg-dark text-white" as="h4">
             {carts[0].Name}
-            <label class="float-right">{carts[0].Price}</label>
+            <label class="float-right">₱{carts[0].Price}</label>
           </Card.Header>  
           <Card.Body data-item={carts[0].CartID} key={carts[0].CartID}>
             <Card.Text>{carts[0].Description}</Card.Text>

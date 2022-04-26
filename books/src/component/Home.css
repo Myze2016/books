@@ -2,6 +2,11 @@
   padding: 35px;
 }
 
+#searchBar {
+  padding-right: 35px;
+  padding-left: 35px;
+}
+
 #modal-loading {
   height: 100px;
   width: 250px;

@@ -4,10 +4,18 @@ import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import {
+	useParams,useNavigate,Link
+} from "react-router-dom";
 
 function Profile() {
 	const [profile, setProfile] = useState({});
-  
+	let navigate = useNavigate();
+	const [FirstName, setFirstName] = useState();
+	const [LastName, setLastName] = useState();
+	const [PhoneNo, setPhoneNo] = useState();
+	const [MobileNo, setMobileNo] = useState();
+	const [Email, setEmail] = useState();
 	
 	  
 
@@ -23,13 +31,32 @@ function Profile() {
 			}
 		  );
 		  
-	
+		  setFirstName(result[0].FirstName);
+		  setLastName(result[0].LastName);
+		  setPhoneNo(result[0].PhoneNo);
+		  setMobileNo(result[0].MobileNo);
+		  setEmail(result[0].Email);
 		  setProfile(result[0]);
+		  
+		  
 		};
 
 		
 		getProfile();
 	},[]);
+
+	const editProfile = (event) => {
+		
+		event.preventDefault();
+		const UserID = sessionStorage.getItem('userID');
+	
+		axios.post('http://localhost/booksapi/public/editProfile', {UserID,FirstName,LastName,MobileNo,PhoneNo,Email}).then(
+		  res => {
+		
+			navigate('/profile');
+		  }
+		)
+	};
 
     
     return (
@@ -43,7 +70,7 @@ function Profile() {
 						<hr></hr>
 					</div>
 
-				<form class="file-upload">
+				<form class="file-upload" onSubmit={editProfile}>
 					<div class="row gx-5">
 
 					<div class="col-xxl-8 mb-xxl-0">
@@ -54,37 +81,37 @@ function Profile() {
 
 								<div class="col-md-6">
 									<label class="form-label">First Name *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="First name" value={profile.FirstName}>
+									<input type="text" class="form-control" placeholder="" aria-label="First name" value={profile.FirstName} onChange={e => setFirstName(e.target.value)} >
                   </input>
               	</div>
 			
 								<div class="col-md-6">
 									<label class="form-label">Last Name *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Last name" value={profile.LastName}>
+									<input type="text" class="form-control" placeholder="" aria-label="Last name" value={profile.LastName} onChange={e => setLastName(e.target.value)} >
                   </input>
                 </div>
 
 								<div class="col-md-6">
 									<label class="form-label">Phone number *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Phone number" value="(333) 000 555">
+									<input type="text" class="form-control" placeholder="" aria-label="Phone number" value={profile.PhoneNo} onChange={e => setPhoneNo(e.target.value)} >
                   </input>
 								</div>
 
 								<div class="col-md-6">
 									<label class="form-label">Mobile number *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Phone number" value="+91 9852 8855 252">
+									<input type="text" class="form-control" placeholder="" aria-label="Phone number" value={profile.ContactNo} onChange={e => setMobileNo(e.target.value)} >
                   </input>
 								</div>
 		
 								<div class="col-md-6">
 									<label for="inputEmail4" class="form-label">Email *</label>
-									<input type="email" class="form-control" id="inputEmail4" value="example@homerealty.com">
+									<input type="email" class="form-control" id="inputEmail4" value={profile.Email} onChange={e => setEmail(e.target.value)} >
                   </input>
 								</div>
 
 								<div class="col-md-6">
 									<label class="form-label">Skype *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Phone number" value="Scaralet D">
+									<input type="text" class="form-control" placeholder="" aria-label="Phone number" value="Scaralet D" >
                   </input>
 								</div>
 							</div> 
@@ -125,7 +152,7 @@ function Profile() {
 				
 				<div class="d-md-flex justify-content-md-center text-center">
 				
-					<button type="button" class="btn btn-outline-primary btn">Update profile</button>
+					<button type="submit" class="btn btn-outline-primary btn">Update profile</button>
 				</div>
 			</form> 
 		</div>

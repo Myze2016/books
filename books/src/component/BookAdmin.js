@@ -82,8 +82,13 @@ function Book() {
     const getBook = async() =>{
       
       const book = await axios.post('http://localhost/booksapi/public/book', {apiID}).then((res) => {
-         
-          return res.data;
+          if (res.data=='error') {
+            alert("ERROR API DATA")
+            return {"apiID":null,"Title":null,"PublishDate":null,"Authors": []};
+          } else {
+            return res.data;
+          }
+          
         }
       );
 

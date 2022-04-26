@@ -19,16 +19,17 @@ import Loading from "./Loading";
 function HomeFunction() {
   let navigate = useNavigate();
   const [modalIsOpen, setIsOpen] = useState();
-  const [loadingModal, setLoading] = useState(false);
+  const [loadingModal, setLoading] = useState(true);
   const [search, setSearch] = useState();
   const [libraries, setLibrary] = useState([]);
-  const [books, setBooks] = useState([{id: 'test',volumeInfo: {title: 'Title', publishedDate: 'publishDate', authors: ['test']}}]);
+  const [books, setBooks] = useState([{id: 'test',volumeInfo: {title: 'Title', publishedDate: 'publishDate', authors: ['test'], imageLinks: {thumbnail:'null'}}}]);
 
 
 
   useEffect(()=>{
+    
     const fetchlibiraries = async() =>{
-      setLoading(true);
+      
       const libraries= await axios.post('http://localhost/booksapi/public/libraryList').then((res) => {
         
         return res.data;
@@ -40,7 +41,7 @@ function HomeFunction() {
     fetchlibiraries();
 
     const fetchbooks = async() =>{
-      setLoading(true);
+    
       const book= await axios.post('http://localhost/booksapi/public/books').then((res) => {
         
         return res.data;
@@ -85,9 +86,15 @@ function HomeFunction() {
     
   return (
     <div>
+      
+{loadingModal ? (
+        <Loading />
+      ) : (
+        ""
+      )}
       <div class="row pl-5 pr-5 pt-3">
       <InputGroup className="mb-3">
-        <FormControl
+        <FormControl className="border border-secondary"
          
           onChange={e => setSearch(e.target.value)}
           placeholder="Search Book"
@@ -102,26 +109,35 @@ function HomeFunction() {
       {
        
         books.map(book => 
-            <div id="Book-List" class="col-3 mb-4" style={{height: '250px'}}>
-              <Card border="success" style={{height: '250px'}} >
-               <Card.Header className="bg-dark text-white" > {book.volumeInfo.title}</Card.Header>  
-                <Card.Body data-item={book.id} key={book.id} onClick={checkBook}>
-                  <Card.Text>{book.volumeInfo.publishedDate}</Card.Text>
+            <div id="Book-List" class="col-3 mb-4" style={{height: '350px'}}>
+              
+              <Card class='border border-secondary' style={{height: '350px'}} >
+              <Card.Header  data-item={book.id}  onClick={checkBook} className="p-0 m-0 bg-dark text-white">
+                <img width="335px" height="150px"
+              src={book.volumeInfo.imageLinks.thumbnail}
+              alt="new"
+              /> 
+              </Card.Header>
+               <Card.Header  data-item={book.id}  onClick={checkBook} className="bg-dark text-white" > {book.volumeInfo.title}
+               
+               
+              </Card.Header> 
+             
+
+                <Card.Body  data-item={book.id}  onClick={checkBook}>
                 
-                  <Card.Text>{book.volumeInfo.authors}</Card.Text>   
+                  <Card.Text  data-item={book.id}  onClick={checkBook}>{book.volumeInfo.publishedDate}</Card.Text>
+                
+                  <Card.Text  data-item={book.id}  onClick={checkBook}>{book.volumeInfo.authors}</Card.Text>   
                   
                 </Card.Body>
+                
               </Card>
         
             </div>  
         ) 
       }
 
-{loadingModal ? (
-        <Loading />
-      ) : (
-        ""
-      )}
       </div>
     </div>
   )

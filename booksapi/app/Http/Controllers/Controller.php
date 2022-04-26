@@ -37,7 +37,7 @@ class Controller extends BaseController
         // $book_json = json_decode(json_encode($book_array));
         // return $book_json;
 
-        $url = "https://www.googleapis.com/books/v1/volumes?q=flowers&filter=free-ebooks&key=$apiKey_2&maxResults=5&startIndex=1";
+        $url = "https://www.googleapis.com/books/v1/volumes?q=flowers&filter=free-ebooks&key=$api_key_2&maxResults=5&startIndex=1";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -105,7 +105,7 @@ class Controller extends BaseController
         $apiID =  $request->input('apiID');
         
      
-        $url = "https://www.googleapis.com/books/v1/volumes/$apiID?key=$apiKey_2&maxResults=1&startIndex=1";
+        $url = "https://www.googleapis.com/books/v1/volumes/$apiID?key=$api_key_2&maxResults=1&startIndex=1";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -114,15 +114,15 @@ class Controller extends BaseController
         $response = curl_exec($ch);
         curl_close($ch);
         $response_json = json_decode($response);
-       
-     
+   
       
         
         $bookInformation = [
             'apiID' => $response_json->id,
             'Title' => $response_json->volumeInfo->title,
             'PublishDate' =>  $response_json->volumeInfo->publishedDate,
-            'Authors' =>  $response_json->volumeInfo->authors
+            'Authors' =>  $response_json->volumeInfo->authors,
+            'img' =>  $response_json->volumeInfo->imageLinks->thumbnail
         ];
         
 
@@ -169,7 +169,7 @@ class Controller extends BaseController
         // return $book_json;
         // Note Error upon entry of space ex. Sherlock Holmes vs SherlockHolmes
         $apiKey = '01';
-        $url = "https://www.googleapis.com/books/v1/volumes?q=$search&filter=free-ebooks&key=$apiKey_2&maxResults=5&startIndex=1";
+        $url = "https://www.googleapis.com/books/v1/volumes?q=$search&filter=free-ebooks&key=$api_key_2&maxResults=5&startIndex=1";
  
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -198,6 +198,20 @@ class Controller extends BaseController
 
      
         $result = \DB::connection()->select('update tbllibrary set Title=?,Description=? where LibraryID=?',[$Title,$Description,$LibraryID]);
+
+        return $result;
+    }
+
+    public function editProfile(Request $request){
+        if ($request->getMethod()=='OPTIONS') { return; };
+        $FirstName = $request->input('FirstName');
+        $LastName = $request->input('LastName');
+        $MobileNo = $request->input('MobileNo');
+        $PhoneNo = $request->input('PhoneNo');
+        $Email = $request->input('Email');
+        $UserID = $request->input('UserID');
+       
+        $result = \DB::connection()->update('update tbluser set FirstName=?,LastName=?,ContactNo=?,PhoneNo=?,Email=? where UserID=?',[$FirstName,$LastName,$MobileNo,$PhoneNo,$Email,$UserID]);
 
         return $result;
     }
@@ -284,7 +298,7 @@ class Controller extends BaseController
             $book_array = array();
             foreach($books as $book) {
                 $ApiID = $book['ApiID'];
-                $url = "https://www.googleapis.com/books/v1/volumes/$ApiID?key=$apiKey_2&maxResults=1&startIndex=1";
+                $url = "https://www.googleapis.com/books/v1/volumes/$ApiID?key=$api_key_2&maxResults=1&startIndex=1";
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

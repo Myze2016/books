@@ -15,7 +15,7 @@ function Report() {
   
   let navigate = useNavigate();
   const [month, setMonth] = useState(4);
-  const [cartPurchase, setPurchase] = useState([{total: 0}]);
+  const [cartPurchase, setPurchase] = useState([{Price:0,total: 0,Amount:0}]);
   const [year, setYear] = useState(2022);
   useEffect(()=>{
     const getPurchase = async() =>{
@@ -95,7 +95,6 @@ function Report() {
           <th>Month</th>
           <th>Year</th>
           <th>Amount</th>
-          <th >Cart ID</th>
           <th >Status</th>
         </tbody>
         <tbody>
@@ -110,7 +109,7 @@ function Report() {
                       <label>{purchase.Name}</label>
                     </td>
                     <td>
-                      <label>{purchase.Price}</label>
+                      <label>{purchase.Price.toFixed(2)}</label>
                     </td>
                     <td>
                       <label>{purchase.UserID}</label>
@@ -127,10 +126,7 @@ function Report() {
                       <label>{purchase.Year}</label>
                     </td>
                     <td>
-                      <label>{purchase.Amount}</label>
-                    </td>
-                    <td>
-                      <label>{purchase.CartID}</label>
+                      <label>{purchase.Amount.toFixed(2)}</label>
                     </td>
                     <td>
                       <label>{purchase.Purchase}</label>
@@ -163,7 +159,7 @@ function Report() {
               <td></td>
               
               <td></td>
-              <td>{cartPurchase[0].total}</td>
+              <td>{cartPurchase[0].total.toFixed(2)}</td>
               <td></td>
               <td></td>
               </tr>

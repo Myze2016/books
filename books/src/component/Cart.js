@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 
 function Cart() {
   let navigate = useNavigate();
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState([{Price:0}]);
 
   useEffect(()=>{
     const getCart = async() =>{
@@ -53,10 +53,11 @@ function Cart() {
             .map(cartItem => 
               <tr id={"cartItem-"+cartItem.CartID}>
                   <td onClick={checkBook} data-item={cartItem.ApiID}>{cartItem.Name}</td>
-                  <td>{cartItem.Price}</td>
-                  <td>{cartItem.Purchase}</td>
+                  <td>{cartItem.Price.toFixed(2)}</td>
+                  <td class={cartItem.Purchase=='done' ? ('text-success') : ('text-danger')} >{cartItem.Purchase}</td>
                   <td>
-                    <button onClick={purchase} data-item={cartItem.CartID} key={cartItem.CartID} class="mt-1 btn btn-outline-primary" >
+                    <button onClick={purchase} data-item={cartItem.CartID} key={cartItem.CartID} class={cartItem.Purchase=='done' ? ('mt-1 btn btn-outline-primary disabled') : ('mt-1 btn btn-outline-primary')} disabled={cartItem.Purchase=='done' ? ('true') : ('false')}>
+                    
                         Checkout 
                     </button>
                   </td>

@@ -12,7 +12,7 @@ function Price() {
 	let navigate = useNavigate();
   let { apiID } = useParams();
   const [book, setBook] = useState({"apiID":null,"Title":null,"PublishDate":null,"Authors": []});
-  const [Price, setPrice] = useState();
+  const [Price, setPrice] = useState(0);
 
 
 
@@ -61,7 +61,7 @@ function Price() {
 
         <Form.Group className="mb-3" >
           <Form.Label>Price</Form.Label>
-          <Form.Control id="bookPrice"  value={Price} onChange={e => setPrice(e.target.value)} type="description" placeholder="0.00" />
+          <Form.Control id="bookPrice"  value={Price.toFixed(2)} onChange={e => setPrice(e.target.value)} type="number" placeholder="0.00" />
         </Form.Group>
         <Button variant="primary" type="submit">
         Submit

@@ -41,3 +41,4 @@ Route::any('books', 'App\Http\Controllers\Controller@getBooks');
 Route::any('book', 'App\Http\Controllers\Controller@getBook');
 Route::any('price', 'App\Http\Controllers\Controller@getPrice'); 
 Route::any('profile', 'App\Http\Controllers\Controller@getProfile');
+Route::any('editProfile', 'App\Http\Controllers\Controller@editProfile');
