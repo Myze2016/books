@@ -20,10 +20,16 @@ function Report() {
   useEffect(()=>{
     const getPurchase = async() =>{
       const purchase= await axios.get('http://localhost/booksapi/public/getPurchase').then((res) => {
+ 
         return res.data; 
         }
       );
-      setPurchase(purchase);
+      if (purchase=='no-results') {
+        setPurchase([{Month:'No Results',Price: 0,Amount:0, total: 0}]);
+      } else {
+        setPurchase(purchase);
+      }
+     
     };
     getPurchase();
   },[]);
@@ -37,8 +43,10 @@ function Report() {
       }
     );
 
+   
+
     if (purchase=='no-results') {
-      setPurchase([{Month:'No Results', total: 0}]);
+      setPurchase([{Month:'No Results',Price: 0,Amount:0, total: 0}]);
     } else {
       setPurchase(purchase);
     }
@@ -55,11 +63,22 @@ function Report() {
     navigate('/home/'+apiID);
   }
 
+  const printReport = report => {
+    var content = document.getElementById("reportPurchase");
+    var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+    pri.document.open();
+    pri.document.write(content.innerHTML);
+    pri.document.close();
+    pri.focus();
+    pri.print();
+  }
 
   
   return (
     <div class="pr-5 pl-5 pt-3">
+      <iframe id="ifmcontentstoprint" style={{height: 0, width: 0, position: 'absolute'}}></iframe>
       <h3> Report </h3>
+      
       <select onChange={e => setMonth(e.target.value)}>
       <option value="1">January</option>
       <option value="2">February</option>
@@ -83,18 +102,21 @@ function Report() {
       <button onClick={runReport}>
           Run Report
       </button>
-      <Card  className="p-3">
+      <button onClick={printReport}>
+          Print Report
+      </button>
+      <Card  id='reportPurchase' className="p-3">
       
-        <table>
+        <table >
         <tbody>
           <th>Book ID</th>
           <th >Book Name</th>
-          <th>Price</th>
+          <th>Price(₱)</th>
           <th >User</th>
           <th>Date</th>
           <th>Month</th>
           <th>Year</th>
-          <th>Amount</th>
+          <th>Amount(₱)</th>
           <th >Status</th>
         </tbody>
         <tbody>

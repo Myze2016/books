@@ -28,7 +28,14 @@ function Cart() {
 
   const purchase = cartItem => {
     const CartID = cartItem.target.getAttribute('data-item');
-    navigate('/cart/pay/'+CartID);
+    const status = cartItem.target.getAttribute('status');
+    
+    if (status=='done') {
+      alert('Item already Purchased')
+    } else {
+      navigate('/cart/pay/'+CartID);
+    }
+
   }
 
   const checkBook = book => {
@@ -56,7 +63,7 @@ function Cart() {
                   <td>{cartItem.Price.toFixed(2)}</td>
                   <td class={cartItem.Purchase=='done' ? ('text-success') : ('text-danger')} >{cartItem.Purchase}</td>
                   <td>
-                    <button onClick={purchase} data-item={cartItem.CartID} key={cartItem.CartID} class={cartItem.Purchase=='done' ? ('mt-1 btn btn-outline-primary disabled') : ('mt-1 btn btn-outline-primary')} disabled={cartItem.Purchase=='done' ? ('true') : ('false')}>
+                    <button status={cartItem.Purchase} onClick={purchase} data-item={cartItem.CartID} key={cartItem.CartID} class={cartItem.Purchase=='done' ? ('mt-1 btn btn-outline-primary invisible') : ('mt-1 btn btn-outline-primary ')} >
                     
                         Checkout 
                     </button>

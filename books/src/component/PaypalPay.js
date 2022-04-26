@@ -8,10 +8,10 @@ import {useNavigate} from "react-router-dom";
 
 function PaypalPay(props) {
   const paypal = useRef();
-  let loaded = 0;
+
   let navigate = useNavigate();
   useEffect(() => {
-    if (loaded==0) {
+ 
     window.paypal
       .Buttons({
         createOrder: (data, actions, err) => {
@@ -33,7 +33,7 @@ function PaypalPay(props) {
           const CartID = props.CartID;
           const Amount = props.Price;
           
-          const PurchaseResult =await axios.post('http://localhost/gbooks/public/purchase', {CartID,Amount}).then((res) => {
+          const PurchaseResult =await axios.post('http://localhost/booksapi/public/purchase', {CartID,Amount}).then((res) => {
               return res.data;
             }
           );
@@ -46,8 +46,8 @@ function PaypalPay(props) {
         },
       })
         .render(paypal.current);
-      loaded=1;
-    }
+     
+    
   }, []);
 
   return (

@@ -61,7 +61,7 @@ function Price() {
 
         <Form.Group className="mb-3" >
           <Form.Label>Price</Form.Label>
-          <Form.Control id="bookPrice"  value={Price.toFixed(2)} onChange={e => setPrice(e.target.value)} type="number" placeholder="0.00" />
+          <Form.Control id="bookPrice"  value={Price} onChange={e => setPrice(e.target.value)} type="number" placeholder="0.00" />
         </Form.Group>
         <Button variant="primary" type="submit">
         Submit

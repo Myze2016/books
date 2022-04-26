@@ -37,7 +37,7 @@ class Controller extends BaseController
         // $book_json = json_decode(json_encode($book_array));
         // return $book_json;
 
-        $url = "https://www.googleapis.com/books/v1/volumes?q=flowers&filter=free-ebooks&key=$api_key_2&maxResults=5&startIndex=1";
+        $url = "https://www.googleapis.com/books/v1/volumes?q=flowers&filter=free-ebooks&key=AIzaSyDQgUAR7b4eukfyzx5bgEn774CGCp7aNT0&maxResults=12&startIndex=1";
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -105,7 +105,7 @@ class Controller extends BaseController
         $apiID =  $request->input('apiID');
         
      
-        $url = "https://www.googleapis.com/books/v1/volumes/$apiID?key=$api_key_2&maxResults=1&startIndex=1";
+        $url = "https://www.googleapis.com/books/v1/volumes/$apiID?key=AIzaSyDQgUAR7b4eukfyzx5bgEn774CGCp7aNT0&maxResults=1&startIndex=1";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -148,6 +148,11 @@ class Controller extends BaseController
     public function getPurchase(Request $request){
         if ($request->getMethod()=='OPTIONS') { return; };
         $result = \DB::connection()->select('select a.Amount,b.CartID,a.*,b.*,c.*,MONTH(a.xTimestamp) as Month,YEAR(a.xTimestamp) as Year,(if(a.Amount=c.Price OR a.Amount>c.Price,"done","pending")) as Purchase,(select sum(Amount) from tblcart_purchase) as total from tblcart_purchase a inner join tblcart b on a.CartID=b.CartID inner join tblbooks c on c.BookID=b.BookID');
+        if (count($result)==0) {
+            return 'no-results';
+        }else {
+            return $result;
+        }
         return $result;
     }
 
@@ -169,7 +174,7 @@ class Controller extends BaseController
         // return $book_json;
         // Note Error upon entry of space ex. Sherlock Holmes vs SherlockHolmes
         $apiKey = '01';
-        $url = "https://www.googleapis.com/books/v1/volumes?q=$search&filter=free-ebooks&key=$api_key_2&maxResults=5&startIndex=1";
+        $url = "https://www.googleapis.com/books/v1/volumes?q=$search&filter=free-ebooks&key=AIzaSyDQgUAR7b4eukfyzx5bgEn774CGCp7aNT0&maxResults=12&startIndex=1";
  
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -241,8 +246,7 @@ class Controller extends BaseController
         $Month = $request->input('month');
         $Year = $request->input('year');
 
-        $Month = '05';
-        $Year = '2022';
+        
       
         $result = \DB::connection()->select('select a.Amount,b.CartID,a.*,b.*,c.*,MONTH(a.xTimestamp) as Month,YEAR(a.xTimestamp) as Year,(if(a.Amount=c.Price OR a.Amount>c.Price,"done","pending")) as Purchase,(select sum(Amount) from tblcart_purchase f where MONTH(f.xTimestamp)=? and Year(f.xTimestamp)=?) as total from tblcart_purchase a inner join tblcart b on a.CartID=b.CartID inner join tblbooks c on c.BookID=b.BookID where MONTH(a.xTimestamp)=? and Year(a.xTimestamp)=?',[$Month,$Year,$Month,$Year]);
 
@@ -298,7 +302,7 @@ class Controller extends BaseController
             $book_array = array();
             foreach($books as $book) {
                 $ApiID = $book['ApiID'];
-                $url = "https://www.googleapis.com/books/v1/volumes/$ApiID?key=$api_key_2&maxResults=1&startIndex=1";
+                $url = "https://www.googleapis.com/books/v1/volumes/$ApiID?key=AIzaSyDQgUAR7b4eukfyzx5bgEn774CGCp7aNT0&maxResults=1&startIndex=1";
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
