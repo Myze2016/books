@@ -25,22 +25,25 @@ import Profile from "./Profile";
 
 
 function Menu() {
-    const [profile, setProfile] = useState({FirstName:"xxxx", LastName:"xxxx"});
+    const [profile, setProfile] = useState({email: 'xxx'});
 
     useEffect(()=>{
 		
 		
 		const getProfile = async() =>{
 		  const UserID = sessionStorage.getItem('userID');
-		  
-		  const result= await axios.post('http://localhost/booksapi/public/profile', {UserID}).then((res) => {
-				
+		 
+		  const result= await axios.post('http://localhost/booksapi/public/profileEQS', {UserID}).then((res) => {
+				console.log(res.data);
+               
 		  		return res.data; 
 			}
 		  );
 		  
 	
-		  setProfile(result[0]);
+   
+         
+		  setProfile(result);
 		};
 
 		
@@ -61,7 +64,7 @@ function Menu() {
                         <Nav.Link href="/Cart">Cart</Nav.Link>
                        
                         <NavDropdown title="Account" id="navbarScrollingDropdown">
-                            <NavDropdown.Item >{profile.FirstName}  {profile.LastName}</NavDropdown.Item>
+                            <NavDropdown.Item >{profile.email}</NavDropdown.Item>
                             <NavDropdown.Item href="/Profile">Profile</NavDropdown.Item>
                             <NavDropdown.Item href="/Logout">Logout</NavDropdown.Item>
                         </NavDropdown>

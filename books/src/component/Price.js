@@ -20,7 +20,18 @@ function Price() {
  
   const addPrice = (event) => {
     event.preventDefault();
-    axios.post('http://localhost/booksapi/public/editBookPrice', {Price,apiID}).then(
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+
+    axios.post('http://localhost/booksclean/public/api/editBookPriceEQS', {Price,apiID}, {headers: headers}).then(
       res => {
         navigate('/home/'+apiID);
        
@@ -31,14 +42,24 @@ function Price() {
     
 
   useEffect(()=>{
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
     const getBook = async() =>{
-      const bookItem = await axios.post('http://localhost/booksapi/public/price', {apiID}).then((res) => {
+      const bookItem = await axios.post('http://localhost/booksclean/public/api/priceEQS', {apiID}, {headers: headers}).then((res) => {
         return res.data;
         }
       );
       
-      setPrice(bookItem[0].Price);
-      setBook(bookItem[0]);
+      setPrice(bookItem.Price);
+      setBook(bookItem);
 
       
      

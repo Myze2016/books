@@ -14,6 +14,16 @@ class Cart extends Model
 
     public function cartPurchase()
     {
-        return $this->hasOne(CartPurchase::class);
+        return $this->hasOne(CartPurchase::class,'CartID','CartID');
+    }
+
+    public function cartBook()
+    {
+        return $this->hasOne(Book::class, 'BookID', 'BookID');
+    }
+
+    public function cartUser()
+    {
+        return $this->hasOne(User::class, 'id', 'UserID');
     }
 }

@@ -15,17 +15,31 @@ function Report() {
   
   let navigate = useNavigate();
   const [month, setMonth] = useState(4);
-  const [cartPurchase, setPurchase] = useState([{Price:0,total: 0,Amount:0}]);
+  const [cartPurchase, setPurchase] = useState([{Price:0,Total: 0,Amount:0,cart: {CartID:'x', cart_book: {ApiID: 'x',Name: 'x',Price: 0}, cart_user: {name: 'x'}}}]);
   const [year, setYear] = useState(2022);
   useEffect(()=>{
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+
     const getPurchase = async() =>{
-      const purchase= await axios.get('http://localhost/booksapi/public/getPurchase').then((res) => {
+
+      
+      const purchase= await axios.get('http://localhost/booksclean/public/api/getPurchaseEQS',{headers: headers}).then((res) => {
  
         return res.data; 
         }
       );
       if (purchase=='no-results') {
-        setPurchase([{Month:'No Results',Price: 0,Amount:0, total: 0}]);
+        
+        setPurchase([{Price:0,Total: 0,Amount:0,cart: {CartID:'', cart_book: {ApiID: '',Name: '',Price: 0}, cart_user: {name: ''}}}]);
       } else {
         setPurchase(purchase);
       }
@@ -35,8 +49,18 @@ function Report() {
   },[]);
 
   const refreshPurchase = async() =>{
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
     
-    const purchase= await axios.post('http://localhost/booksapi/public/searchPurchase',{month,year}).then((res) => {
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+    
+    const purchase= await axios.post('http://localhost/booksclean/public/api/searchPurchaseEQS',{month,year},{headers: headers}).then((res) => {
        
        return res.data; 
       
@@ -46,7 +70,7 @@ function Report() {
    
 
     if (purchase=='no-results') {
-      setPurchase([{Month:'No Results',Price: 0,Amount:0, total: 0}]);
+      setPurchase([{Price:0,Total: 0,Amount:0,cart: {CartID:'', cart_book: {ApiID: '',Name: '',Price: 0}, cart_user: {name: ''}}}]);
     } else {
       setPurchase(purchase);
     }
@@ -125,16 +149,18 @@ function Report() {
             .map(purchase => 
                 <tr>
                     <td>
-                      <label>{purchase.ApiID}</label>
+                      
+                      <label>{purchase.cart.cart_book.ApiID}</label>
                     </td>
                     <td>
-                      <label>{purchase.Name}</label>
+                      <label>{purchase.cart.cart_book.Name}</label>
                     </td>
                     <td>
-                      <label>{purchase.Price.toFixed(2)}</label>
+                      <label>{purchase.cart.cart_book.Price.toFixed(2)}</label>
                     </td>
                     <td>
-                      <label>{purchase.UserID}</label>
+                      
+                      <label>{purchase.cart.cart_user.name}</label>
                     </td>
                     <td>
                       <label>{purchase.xTimestamp}</label>
@@ -181,7 +207,7 @@ function Report() {
               <td></td>
               
               <td></td>
-              <td>{cartPurchase[0].total.toFixed(2)}</td>
+              <td>{cartPurchase[0].Total.toFixed(2)}</td>
               <td></td>
               <td></td>
               </tr>

@@ -24,43 +24,44 @@ import Profile from "./Profile";
 import BookAdmin from './BookAdmin';
 
 function MenuAdmin() {
-
-    const [profile, setProfile] = useState({FirstName:"xxxx", LastName:"xxxx"});
+    const [profile, setProfile] = useState({email: 'xxx'});
 
     useEffect(()=>{
 		
 		
 		const getProfile = async() =>{
 		  const UserID = sessionStorage.getItem('userID');
-		  
-		  const result= await axios.post('http://localhost/booksapi/public/profile', {UserID}).then((res) => {
-				
+		 
+		  const result= await axios.post('http://localhost/booksapi/public/profileEQS', {UserID}).then((res) => {
+				console.log(res.data);
+               
 		  		return res.data; 
 			}
 		  );
 		  
 	
-		  setProfile(result[0]);
+         
+		  setProfile(result);
 		};
 
 		
 		getProfile();
 	},[]);
 
-
     return (
         <>
         <Router>
             <Navbar bg="dark" variant="dark" sticky="top" expand="lg">
             <Container fluid>
-                <Navbar.Brand href="#">Books </Navbar.Brand>
+                <Navbar.Brand href="#">Books</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '175px' }} navbarScroll>
-                        <Nav.Link href="/home">Home</Nav.Link>
+                    <Nav.Link href="/home">Home</Nav.Link>
                         <Nav.Link href="/report">Reports</Nav.Link>
+                       
                         <NavDropdown title="Account" id="navbarScrollingDropdown">
-                        <NavDropdown.Item >{profile.FirstName} {profile.LastName}</NavDropdown.Item>
+                            <NavDropdown.Item >{profile.email}</NavDropdown.Item>
                             <NavDropdown.Item href="/Profile">Profile</NavDropdown.Item>
                             <NavDropdown.Item href="/Logout">Logout</NavDropdown.Item>
                         </NavDropdown>
@@ -73,17 +74,16 @@ function MenuAdmin() {
             <Routes>
                 <Route path="/home"  element={<HomeFunction />} >
                 </Route>
-
                 <Route path="/profile"  element={<Profile />} >
                 </Route>
+       
+       
 
                 <Route path={`/home/:apiID`} element={<BookAdmin />}>
                 </Route>
         
                 <Route path={`/report`} element={<Report />}>
                 </Route>    
-
-               
 
                 <Route path={`/cart/pay/:CartID`} element={<Pay />}>
                 </Route>
@@ -93,6 +93,7 @@ function MenuAdmin() {
 
                 <Route path={`/cart`} element={<Cart />}>
                 </Route>
+
 
 
                 <Route path={`/library/add`} element={<LibraryAdd />}>
@@ -113,6 +114,7 @@ function MenuAdmin() {
         </Router>
         </>
     )  
+
 }
 
 export default MenuAdmin;

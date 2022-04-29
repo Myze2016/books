@@ -15,11 +15,15 @@ function Pay() {
   const [carts, setCart] = useState([{Price: '0'}]);
 	
   useEffect(()=>{
+    
     const getCartItem = async() =>{
-    const cartItem= await axios.post('http://localhost/booksapi/public/cartItem', {CartID}).then((res) => {
-      return res.data;
+      
+      const cartItem= await axios.post('http://localhost/booksapi/public/cartItemEQS', {CartID}).then((res) => {
+        return res.data;
+
       }
     );
+    
     setCart(cartItem);
     };
     getCartItem();
@@ -31,11 +35,11 @@ function Pay() {
       <div class="col-9">
         <Card>
           <Card.Header className="bg-dark text-white" as="h4">
-            {carts[0].Name}
-            <label class="float-right">₱{carts[0].Price}</label>
+            {carts.Name}
+            <label class="float-right">₱{carts.Price}</label>
           </Card.Header>  
-          <Card.Body data-item={carts[0].CartID} key={carts[0].CartID}>
-            <Card.Text>{carts[0].Description}</Card.Text>
+          <Card.Body data-item={carts.CartID} key={carts.CartID}>
+            <Card.Text>{carts.Description}</Card.Text>
           </Card.Body>        
         </Card>
       </div>
@@ -45,7 +49,7 @@ function Pay() {
           Paypal 
         </Button>
       </ButtonGroup>
-      {checkOut ?  ( <PaypalPay CartID={carts[0].CartID} Price={carts[0].Price} />) : ("")}
+      {checkOut ?  ( <PaypalPay CartID={carts.CartID} Price={carts.Price} />) : ("")}
       </div>
     </div>
   );

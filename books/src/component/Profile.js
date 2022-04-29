@@ -20,12 +20,21 @@ function Profile() {
 	  
 
 	useEffect(()=>{
+		const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+		const headers = {
+			accept: 'application/json',
+			authorization: 'Bearer '+sanctum,
+		} 
+
+		
+		axios.defaults.withCredentials = true;
 		
 		
 		const getProfile = async() =>{
 		  const UserID = sessionStorage.getItem('userID');
 		  
-		  const result= await axios.post('http://localhost/booksapi/public/profile', {UserID}).then((res) => {
+		  const result= await axios.post('http://localhost/booksclean/public/api/userProfile', {UserID}, {headers: headers}).then((res) => {
 				
 		  		return res.data; 
 			}
@@ -49,8 +58,18 @@ function Profile() {
 		
 		event.preventDefault();
 		const UserID = sessionStorage.getItem('userID');
+
+		const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+		const headers = {
+			accept: 'application/json',
+			authorization: 'Bearer '+sanctum,
+		} 
+
+		
+		axios.defaults.withCredentials = true;
 	
-		axios.post('http://localhost/booksapi/public/editProfile', {UserID,FirstName,LastName,MobileNo,PhoneNo,Email}).then(
+		axios.post('http://localhost/booksclean/public/api/editProfile', {UserID,FirstName,LastName,MobileNo,PhoneNo,Email}, {headers: headers}).then(
 		  res => {
 		
 			navigate('/profile');
@@ -81,13 +100,13 @@ function Profile() {
 
 								<div class="col-md-6">
 									<label class="form-label">First Name *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="First name" value={profile.FirstName} onChange={e => setFirstName(e.target.value)} >
+									<input type="text" class="form-control" placeholder="" aria-label="First name" value={FirstName} onChange={e => setFirstName(e.target.value)} >
                   </input>
               	</div>
 			
 								<div class="col-md-6">
 									<label class="form-label">Last Name *</label>
-									<input type="text" class="form-control" placeholder="" aria-label="Last name" value={profile.LastName} onChange={e => setLastName(e.target.value)} >
+									<input type="text" class="form-control" placeholder="" aria-label="Last name" value={LastName} onChange={e => setLastName(e.target.value)} >
                   </input>
                 </div>
 

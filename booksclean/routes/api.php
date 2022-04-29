@@ -24,4 +24,13 @@ Route::middleware('auth:sanctum')->any('/libraryEQS', [Apicontroller::class, 'ge
 Route::middleware('auth:sanctum')->any('/deleteBookEQS', [Apicontroller::class, 'deleteBookEQS']);
 Route::middleware('auth:sanctum')->any('/deleteLibraryEQS', [Apicontroller::class, 'deleteLibraryEQS']);
 Route::middleware('auth:sanctum')->any('/purchaseEQS', [Apicontroller::class, 'purchaseEQS']);
+Route::middleware('auth:sanctum')->any('/getPurchaseEQS', [Apicontroller::class, 'getPurchaseEQS']);
+Route::middleware('auth:sanctum')->any('/searchPurchaseEQS', [Apicontroller::class, 'searchPurchaseEQS']);
+Route::middleware('auth:sanctum')->any('/userProfile', [Apicontroller::class, 'getUserProfile']);
+Route::middleware('auth:sanctum')->any('/editProfile', [Apicontroller::class, 'editProfile']);
+Route::middleware('auth:sanctum')->any('/priceEQS', [Apicontroller::class, 'getPriceEQS']);
+Route::middleware('auth:sanctum')->any('/editBookPriceEQS', [Apicontroller::class, 'editBookPriceEQS']);
+Route::middleware('auth:sanctum')->any('/libraryListEQS', [Apicontroller::class, 'getLibraryListEQS']);
+Route::middleware('auth:sanctum')->any('/addCartEQS', [Apicontroller::class, 'addCartEQS']);
+
 

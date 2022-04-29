@@ -9,15 +9,33 @@ import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Cookies from 'universal-cookie';
 
 function Cart() {
   let navigate = useNavigate();
   const [cart, setCart] = useState([{Price:0}]);
+  
 
   useEffect(()=>{
+
+    
+  
+    //axios.defaults.withCredentials = true;
+    
     const getCart = async() =>{
-      const cart= await axios.post('http://localhost/booksapi/public/cart').then((res) => {
+      const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+      const headers = {
+          accept: 'application/json',
+          authorization: 'Bearer '+sanctum,
+      } 
+
+      
+      axios.defaults.withCredentials = true;
+      const UserID = sessionStorage.getItem('userID');
+      const cart= await axios.post('http://localhost/booksclean/public/api/cartEQS', {UserID}, {headers: headers}).then((res) => {
         return res.data;
+        
         }
       );
       setCart(cart);
@@ -28,13 +46,9 @@ function Cart() {
 
   const purchase = cartItem => {
     const CartID = cartItem.target.getAttribute('data-item');
-    const status = cartItem.target.getAttribute('status');
     
-    if (status=='done') {
-      alert('Item already Purchased')
-    } else {
-      navigate('/cart/pay/'+CartID);
-    }
+    
+    navigate('/cart/pay/'+CartID);
 
   }
 
@@ -61,9 +75,9 @@ function Cart() {
               <tr id={"cartItem-"+cartItem.CartID}>
                   <td onClick={checkBook} data-item={cartItem.ApiID}>{cartItem.Name}</td>
                   <td>{cartItem.Price.toFixed(2)}</td>
-                  <td class={cartItem.Purchase=='done' ? ('text-success') : ('text-danger')} >{cartItem.Purchase}</td>
+                  <td class={cartItem.Price==cartItem.Amount ? ('text-success') : ('text-danger')} >{cartItem.Price==cartItem.Amount ? ('Done') : ('Pending')}</td>
                   <td>
-                    <button status={cartItem.Purchase} onClick={purchase} data-item={cartItem.CartID} key={cartItem.CartID} class={cartItem.Purchase=='done' ? ('mt-1 btn btn-outline-primary invisible') : ('mt-1 btn btn-outline-primary ')} >
+                    <button onClick={purchase} data-item={cartItem.CartID} key={cartItem.CartID} class={cartItem.Price==cartItem.Amount  ? ('mt-1 btn btn-outline-primary invisible') : ('mt-1 btn btn-outline-primary ')} >
                     
                         Checkout 
                     </button>

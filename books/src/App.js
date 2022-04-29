@@ -1,10 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
 import Login from './component/Login';
+import Register from './component/Register';
+import User from './component/User';
 import Menu from './component/Menu';
 import MenuAdmin from './component/MenuAdmin';
 
+
 function App() {
+ 
 
   const getToken = () => {
     const tokenString = sessionStorage.getItem('token');
@@ -13,7 +17,7 @@ function App() {
   };
 
   const getUserType = () => {
-    const userType = sessionStorage.getItem('userType');
+    const userType = sessionStorage.getItem('userID');
     return userType;
   };
   
@@ -22,13 +26,14 @@ function App() {
 
 
   if(token==false || token==null) {
-    return <Login />  
+    return <User />  
   } else {
-    if (userType=='Admin') {
-      return <MenuAdmin/>
-    } else {
-       return <Menu/>
-    }
+    
+     if (userType=='15') {
+       return <MenuAdmin/>
+     } else {
+        return <Menu/>
+     }
  
   }
 

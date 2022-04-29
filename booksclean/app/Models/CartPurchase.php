@@ -16,4 +16,10 @@ class CartPurchase extends Model
         return $this->belongsTo('App\Models\Cart');
     }
 
+    public function cart()
+    {
+        return $this->hasOne(Cart::class,'CartID','CartID');
+    }
+    
+
 }

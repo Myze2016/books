@@ -34,7 +34,8 @@ function Book() {
     const apiID = book.apiID;
     const Title = book.Title;
     const PublishDate = book.PublishDate;
-    axios.post('http://localhost/booksapi/public/addBook', {LibraryID,apiID,Title,PublishDate}).then(
+
+    axios.post('http://localhost/booksclean/public/addBookEQS', {LibraryID,apiID,Title,PublishDate}).then(
       res => {
           setModalIsOpenToFalse();
           alert('Book added to library');
@@ -47,7 +48,7 @@ function Book() {
     const apiID = book.apiID;
     const Title = book.Title;
     const PublishDate = book.PublishDate;
-    axios.post('http://localhost/booksapi/public/addBookPrice', {apiID,Title,PublishDate}).then(
+    axios.post('http://localhost/booksclean/public/addBookEQS', {apiID,Title,PublishDate}).then(
       res => {
           navigate('/home/price/'+apiID);
         }
@@ -56,12 +57,23 @@ function Book() {
 
   const addcart = (event) => {
     const apiID = book.apiID;
-    const Title = book.Title;
-    const PublishDate = book.PublishDate;
-    axios.post('http://localhost/booksapi/public/addCart', {apiID}).then(
+    const UserID = sessionStorage.getItem('userID');
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+    
+    axios.post('http://localhost/booksclean/public/api/addCartEQS', {apiID,UserID}, {headers: headers}).then(
     res => {
+       
         if (res.data=='price_not_set') {
-          alert('Price Not Set');
+          alert('Book Unavailable');
         } else {
           navigate('/cart');
         }
@@ -77,8 +89,20 @@ function Book() {
 
   useEffect(()=>{
     setLoading(true);
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+
     const libraryList = async() =>{
-      const libraryList = await axios.post('http://localhost/booksapi/public/libraryList').then((res) => {
+      const UserID = sessionStorage.getItem('userID');
+      const libraryList = await axios.post('http://localhost/booksclean/public/api/libraryListEQS', {UserID}, {headers: headers}).then((res) => {
         return res.data;
         }
       );
@@ -90,7 +114,7 @@ function Book() {
     
     const getBook = async() =>{
     
-      const book = await axios.post('http://localhost/booksapi/public/book', {apiID}).then((res) => {
+      const book = await axios.post('http://localhost/booksclean/public/book', {apiID}).then((res) => {
           
           if (res.data=='error') {
             alert("ERROR API DATA")

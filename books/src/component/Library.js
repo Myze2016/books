@@ -18,18 +18,38 @@ function Library() {
   const [libraries, setLibrary] = useState([]);
 
   useEffect(()=>{
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+    
     const getLibrary = async() =>{
-      const library= await axios.get('http://localhost/booksapi/public/library').then((res) => {
+      const UserID = sessionStorage.getItem('userID');
+      
+      const library= await axios.post('http://localhost/booksclean/public/api/libraryEQS', {UserID}, {headers: headers}).then((res) => {
+       
+     
         return res.data; 
         }
       );
+      
+      
       setLibrary(library);
     };
+
+  
     getLibrary();
   },[]);
 
   const refreshLibrary = async() =>{
-    const library= await axios.get('http://localhost/booksapi/public/library').then((res) => {
+    const library= await axios.get('http://localhost/booksclean/public/libraryEQS').then((res) => {
+      
       return res.data; 
       }
     );
@@ -38,8 +58,16 @@ function Library() {
  
   const deleteBook = product => {
     const LibraryUserID = product.target.getAttribute('data-item');
-    console.log(LibraryUserID);
-    axios.post('http://localhost/booksapi/public/deleteBook', {LibraryUserID}).then(
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+    axios.post('http://localhost/booksclean/public/api/deleteBookEQS', {LibraryUserID}, {headers: headers}).then(
       res => {
         console.log(res);
         refreshLibrary();
@@ -49,7 +77,18 @@ function Library() {
 
   const deleteLibrary = product => {
     const LibraryID = product.target.getAttribute('data-item');
-    axios.post('http://localhost/booksapi/public/deleteLibrary', {LibraryID}).then(
+
+    const sanctum = JSON.parse(localStorage.getItem('sanctum'));
+    
+    const headers = {
+        accept: 'application/json',
+        authorization: 'Bearer '+sanctum,
+    } 
+
+    
+    axios.defaults.withCredentials = true;
+    
+    axios.post('http://localhost/booksclean/public/api/deleteLibraryEQS', {LibraryID}, {headers: headers}).then(
      res => {
         refreshLibrary();
       }
@@ -112,16 +151,18 @@ function Library() {
                     </thead>
                 <tbody>
                 {
-                  library.Books.map(book => 
-                  <tr>
-                    <td >
-                      <label data-item={book.apiID} onClick={checkBook}>{book.BookName} : {book.Title}</label>
+                  library.books.map(librarybook => 
+                  <tr >
+                    
+                    <td data-item={librarybook.book.ApiID} onClick={checkBook}>
+                      <label>  </label>
+                      <label data-item={librarybook.book.ApiID} onClick={checkBook}>{librarybook.book.Name} : {librarybook.Title}</label>
+                    </td>
+                    <td data-item={librarybook.book.ApiID} onClick={checkBook}>
+                      <label data-item={librarybook.book.ApiID} onClick={checkBook}>{librarybook.Description}</label>
                     </td>
                     <td >
-                      <label data-item={book.apiID} onClick={checkBook}>{book.PublishDate}</label>
-                    </td>
-                    <td>
-                      <button data-item={book.LibraryUserID}  onClick={deleteBook} class=" mt-1 btn btn-outline-danger" >Remove Book</button>
+                      <button data-item={librarybook.LibraryUserID}  onClick={deleteBook} class=" mt-1 btn btn-outline-danger" >Remove Book</button>
                     </td>
                   </tr>
                   )

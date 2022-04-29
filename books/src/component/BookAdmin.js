@@ -18,70 +18,24 @@ function Book() {
   const [book, setBook] = useState({"apiID":null,"Title":null,"PublishDate":null,"Authors": []});
   
 
-
-  const setModalIsOpenToTrue =()=>{
-    setIsOpen(true)
-  }
-
-  const setModalIsOpenToFalse =()=>{
-    setIsOpen(false)
-  }
-
-  const addToLibrary = (event) => {
-    const LibraryID = event.target.getAttribute('data-item');
-    const apiID = book.apiID;
-    const Title = book.Title;
-    const PublishDate = book.PublishDate;
-    axios.post('http://localhost/booksapi/public/addBook', {LibraryID,apiID,Title,PublishDate}).then(
-      res => {
-          setModalIsOpenToFalse();
-        }
-      )
-  };
+  
 
   const addPrice = event => {
     const apiID = book.apiID;
     const Title = book.Title;
     const PublishDate = book.PublishDate;
-    axios.post('http://localhost/booksapi/public/addBookPrice', {apiID,Title,PublishDate}).then(
+    axios.post('http://localhost/booksclean/public/addBookEQS', {apiID,Title,PublishDate}).then(
       res => {
           navigate('/home/price/'+apiID);
         }
       )
   }
 
-  const addcart = (event) => {
-    const apiID = book.apiID;
-    const Title = book.Title;
-    const PublishDate = book.PublishDate;
-    axios.post('http://localhost/booksapi/public/addBookPrice', {apiID,Title,PublishDate}).then(
-    res => {
-      
-      }
-    )
-
-    axios.post('http://localhost/booksapi/public/addCart', {apiID}).then(
-      res => {
-        navigate('/cart');
-      }
-    )
-  };
 
   useEffect(()=>{
-    const libraryList = async() =>{
-      const libraryList = await axios.post('http://localhost/booksapi/public/libraryList').then((res) => {
-        return res.data;
-        }
-      );
-      setLibraryList(libraryList);
-
-    };
-    
-    libraryList();
-    
     const getBook = async() =>{
       
-      const book = await axios.post('http://localhost/booksapi/public/book', {apiID}).then((res) => {
+      const book = await axios.post('http://localhost/booksclean/public/book', {apiID}).then((res) => {
           if (res.data=='error') {
             alert("ERROR API DATA")
             return {"apiID":null,"Title":null,"PublishDate":null,"Authors": []};
@@ -109,27 +63,8 @@ function Book() {
   return (
     
     <div>
-      <Modal isOpen={modalIsOpen}>
-         
-          <h2>{book.id}</h2>
-          <button class=" mt-1 btn btn-outline-danger" onClick={setModalIsOpenToFalse}>x</button>
-          {
-            libraryList.map(library => 
-                <div id="booklist" class="pb-1 pt-2 col-12" >
-                  <Card >
-                    <Card.Body data-item={library.Title} key={library.Title} >
-                      <div class="row">
-                        <div class="col-10"><Card.Text>{library.Title}</Card.Text></div>
-                        <div class="col-2"><button class="w-100 mt-1 btn btn-outline-primary" data-item={library.LibraryID} onClick={addToLibrary}>Add to Library</button></div>
-                      </div>
-                    </Card.Body>
-                  </Card> 
-                </div>
-            )
-          }
-        </Modal> 
-        
-        <div class="row pr-5 pl-5 pt-3">
+      
+      <div class="row pr-5 pl-5 pt-3">
        
         <div id="book" class="col-9" >
           <Card>

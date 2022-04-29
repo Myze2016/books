@@ -30,7 +30,7 @@ function HomeFunction() {
     
     const fetchlibiraries = async() =>{
       
-      const libraries= await axios.post('http://localhost/booksapi/public/libraryList').then((res) => {
+      const libraries= await axios.post('http://localhost/booksclean/public/libraryListEQS').then((res) => {
         
         return res.data;
         }
@@ -42,7 +42,7 @@ function HomeFunction() {
 
     const fetchbooks = async() =>{
     
-      const book= await axios.post('http://localhost/booksapi/public/books').then((res) => {
+      const book= await axios.post('http://localhost/booksclean/public/books').then((res) => {
         
         return res.data;
         
@@ -62,7 +62,7 @@ function HomeFunction() {
   const refreshBooks = async() =>{
     setLoading(true);
   
-    const book= await axios.post('http://localhost/booksapi/public/searchBook',{search}).then((res) => {
+    const book= await axios.post('http://localhost/booksclean/public/searchBook',{search}).then((res) => {
         
         console.log(res.data);
         return res.data;

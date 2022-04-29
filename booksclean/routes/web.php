@@ -25,6 +25,8 @@ Route::any('/loginEQS', 'App\Http\Controllers\Controller@loginEQS');
 
 //Menu and Profile
 Route::any('profileEQS', 'App\Http\Controllers\Controller@getProfileEQS');
+
+Route::any('userProfile', 'App\Http\Controllers\Controller@getUserProfile');
 Route::any('editProfile', 'App\Http\Controllers\Controller@editProfile');
 
 //Get Book from API
@@ -56,12 +58,14 @@ Route::any('editBookPriceEQS', 'App\Http\Controllers\Controller@editBookPriceEQS
 Route::any('priceEQS', 'App\Http\Controllers\Controller@getPriceEQS'); 
 
 //Reports
-Route::any('getPurchase', 'App\Http\Controllers\Controller@getPurchase'); 
-Route::any('searchPurchase', 'App\Http\Controllers\Controller@searchPurchase');
+Route::any('getPurchaseEQS', 'App\Http\Controllers\Controller@getPurchaseEQS'); 
+Route::any('searchPurchaseEQS', 'App\Http\Controllers\Controller@searchPurchaseEQS');
 
 //Testing
 Route::get('token', 'App\Http\Controllers\Controller@getToken');
 //Don use this
-Route::any('test', 'App\Http\Controllers\Controller@test');
+Route::any('test', 'App\Http\Controllers\Controller@ModelTesting');
 Route::any('loginEQ', 'App\Http\Controllers\Controller@loginEQ');
 Route::any('errorwentwrong', 'App\Http\Controllers\Controller@errorwentwrong');
+
+

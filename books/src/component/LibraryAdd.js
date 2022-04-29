@@ -13,7 +13,9 @@ function LibraryAdd() {
 
   const addLibrary = (event) => {
     event.preventDefault();
-    axios.post('http://localhost/booksapi/public/addLibrary', {Title,Description}).then(
+    const UserID = sessionStorage.getItem('userID');
+
+    axios.post('http://localhost/booksclean/public/addLibraryEQS', {Title,Description,UserID}).then(
       res => {
         navigate('/library');
       }

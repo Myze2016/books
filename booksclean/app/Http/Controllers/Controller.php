@@ -17,6 +17,7 @@ use App\Models\Cart as Cart;
 use App\Models\Book as Book;
 use App\Models\Library as Library;
 use App\Models\LibraryDetail as LibraryDetail;
+use App\Models\Profile as Profile;
 
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Origin: http://localhost:3000');
@@ -140,6 +141,40 @@ class Controller extends BaseController {
 
     }
 
+    public function getProfileEQS(Request $request){
+
+        //Done Refactor
+      
+        if ($request->getMethod()=='OPTIONS') { return; };
+
+        //$UserID = $request->input('UserID');
+
+        
+        $user = User::where('id', $request->only('UserID'))->get();
+        
+       // $result = \DB::connection()->select('select * from tbluser where UserID=?',[$UserID]);
+    
+        return $user[0];
+    
+    }
+
+    public function getUserProfile(Request $request){
+
+        //Done Refactor
+      
+        if ($request->getMethod()=='OPTIONS') { return; };
+
+        //$UserID = $request->input('UserID');
+
+        
+        $user = Profile::where('UserID', $request->only('UserID'))->get();
+        
+       // $result = \DB::connection()->select('select * from tbluser where UserID=?',[$UserID]);
+    
+        return $user;
+    
+    }
+
     public function purchaseEQS(Request $request){
         //Done Refactor
         if ($request->getMethod()=='OPTIONS') { return; };
@@ -194,15 +229,19 @@ class Controller extends BaseController {
         return $result[0];
     }
 
-    public function getPurchase(Request $request){
+    public function getPurchaseEQS(Request $request){
         if ($request->getMethod()=='OPTIONS') { return; };
         
-        $result = \DB::connection()->select('select a.Amount,b.CartID,a.*,b.*,c.*,MONTH(a.xTimestamp) as Month,YEAR(a.xTimestamp) as Year,(if(a.Amount=c.Price OR a.Amount>c.Price,"done","pending")) as Purchase,(select sum(Amount) from tblcart_purchase) as total from tblcart_purchase a inner join tblcart b on a.CartID=b.CartID inner join tblbooks c on c.BookID=b.BookID');
+        // $result = \DB::connection()->select('select a.Amount,b.CartID,a.*,b.*,c.*,MONTH(a.xTimestamp) as Month,YEAR(a.xTimestamp) as Year,(if(a.Amount=c.Price OR a.Amount>c.Price,"done","pending")) as Purchase,(select sum(Amount) from tblcart_purchase) as total from tblcart_purchase a inner join tblcart b on a.CartID=b.CartID inner join tblbooks c on c.BookID=b.BookID');
+
+        $result = CartPurchase::with('cart.cartBook','cart.cartUser')
+        ->select('*')->selectRaw('MONTH(tblcart_purchase.xTimestamp) as Month,YEAR(tblcart_purchase.xTimestamp) as Year,(select sum(Amount) from tblcart_purchase ) as Total')->get();
+        
+
         if (count($result)==0) {
             return 'no-results';
-        }else {
-            return $result;
         }
+
         return $result;
     }
 
@@ -229,8 +268,8 @@ class Controller extends BaseController {
 
     public function getLibraryListEQS(Request $request){
         if ($request->getMethod()=='OPTIONS') { return; };
-
-        $result = Library::all();
+        $UserID = $request->input('UserID');
+        $result = Library::where('tbllibrary.UserID',$UserID)->get();
 
         return $result;
     }
@@ -258,10 +297,30 @@ class Controller extends BaseController {
         $PhoneNo = $request->input('PhoneNo');
         $Email = $request->input('Email');
         $UserID = $request->input('UserID');
-       
-        $result = \DB::connection()->update('update tbluser set FirstName=?,LastName=?,ContactNo=?,PhoneNo=?,Email=? where UserID=?',[$FirstName,$LastName,$MobileNo,$PhoneNo,$Email,$UserID]);
 
-        return $result;
+        
+
+        $result = Profile::where('UserID',$UserID)->get();
+        
+        
+        if ($result->count()==0) { 
+            $Profile = new Profile;
+            $Profile->UserID = $UserID;
+            $Profile->save();
+         
+           
+        }
+
+     
+        
+       
+
+
+        Profile::where('UserID', $UserID)
+        ->update(['FirstName' => $FirstName ,'LastName'=>$LastName,'ContactNo' => $MobileNo ,'PhoneNo'=>$PhoneNo,
+        'Email' => $Email]);
+       
+        return 'success';
     }
 
     public function addLibraryEQS(Request $request){
@@ -269,23 +328,25 @@ class Controller extends BaseController {
 
         $Title = $request->input('Title');
         $Description = $request->input('Description');
+        $UserID = $request->input('UserID');
 
         $Library = new Library;
         $Library->Title = $Title;
         $Library->Description = $Description;
+        $Library->UserID = $UserID;
         $Library->save();
      
         return 'success';
     }
 
 
-    public function searchPurchase(Request $request){
+    public function searchPurchaseEQS(Request $request){
         if ($request->getMethod()=='OPTIONS') { return; };
 
         $Month = $request->input('month');
         $Year = $request->input('year');
 
-        $result = \DB::connection()->select('select a.Amount,b.CartID,a.*,b.*,c.*,MONTH(a.xTimestamp) as Month,YEAR(a.xTimestamp) as Year,(if(a.Amount=c.Price OR a.Amount>c.Price,"done","pending")) as Purchase,(select sum(Amount) from tblcart_purchase f where MONTH(f.xTimestamp)=? and Year(f.xTimestamp)=?) as total from tblcart_purchase a inner join tblcart b on a.CartID=b.CartID inner join tblbooks c on c.BookID=b.BookID where MONTH(a.xTimestamp)=? and Year(a.xTimestamp)=?',[$Month,$Year,$Month,$Year]);
+        $result = CartPurchase::with('cart.cartBook','cart.cartUser')->select('*')->selectRaw('MONTH(tblcart_purchase.xTimestamp) as Month,YEAR(tblcart_purchase.xTimestamp) as Year,(select sum(Amount) from tblcart_purchase where MONTH(xTimestamp)=? and Year(xTimestamp)=?) as Total')->whereRaw('MONTH(xTimestamp)=?')->whereRaw('Year(xTimestamp)=?')->setBindings([$Month,$Year,$Month,$Year])->get();
 
         if (count($result)==0) {
             return 'no-results';
@@ -366,6 +427,7 @@ class Controller extends BaseController {
     public function addCartEQS(Request $request){
         if ($request->getMethod()=='OPTIONS') { return; };
         $apiID = $request->input('apiID');
+        $UserID = $request->input('UserID');
         $BookCount = Book::where('tblbooks.ApiID',$apiID)->count();
     
         if ($BookCount==0) {
@@ -377,6 +439,7 @@ class Controller extends BaseController {
         $Cart = new Cart;
         $Cart->BookID = $BookID[0]->BookID;
         $Cart->Status = 'pending';
+        $Cart->UserID = $UserID;
         $Cart->save();
 
         return 'success';
@@ -389,6 +452,17 @@ class Controller extends BaseController {
         $token = csrf_token();
         return $token;
     }
+
+    public function ModelTesting(Request $request){
+
+        $Month = '4';
+        $Year = '2022';
+        $report = CartPurchase::with('cart.cartBook','cart.cartUser')->select('*')->selectRaw('MONTH(tblcart_purchase.xTimestamp) as Month,YEAR(tblcart_purchase.xTimestamp) as Year,(select sum(Amount) from tblcart_purchase where MONTH(xTimestamp)=? and Year(xTimestamp)=?) as Total')->whereRaw('MONTH(xTimestamp)=?')->whereRaw('Year(xTimestamp)=?')->setBindings([$Month,$Year,$Month,$Year])->get();
+
+        
+        return $report;
+    }
+    
     
 
 }

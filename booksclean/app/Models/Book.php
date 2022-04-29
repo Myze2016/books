@@ -11,4 +11,8 @@ class Book extends Model
     public $timestamps = false;
     protected $table = 'tblbooks';
     protected $primaryKey = 'BookID';
+
+    public function user() {
+        return $this->belongsTo('App\Models\Cart', 'BookID', 'BookID');
+    }
 }

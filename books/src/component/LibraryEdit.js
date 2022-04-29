@@ -18,7 +18,7 @@ function LibraryEdit() {
   const editLibrary = (event) => {
     event.preventDefault();
     
-    axios.post('http://localhost/booksapi/public/editLibrary', {LibraryID,Title,Description}).then(
+    axios.post('http://localhost/booksclean/public/editLibraryEQS', {LibraryID,Title,Description}).then(
       res => {
         navigate('/library');
       }
@@ -31,12 +31,13 @@ function LibraryEdit() {
     
     const getLibrary = async() =>{
       
-      const result= await axios.post('http://localhost/booksapi/public/getLibraryItem', {LibraryID}).then((res) => {
+      const result= await axios.post('http://localhost/booksclean/public/getLibraryItemEQS', {LibraryID}).then((res) => {
         var result = res.data;
       
        
-        setTitle(result[0].Title);
-        setDescription(result[0].Description);
+       
+        setTitle(result.Title);
+        setDescription(result.Description);
         //return result;
       
       }
